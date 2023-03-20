@@ -63,7 +63,7 @@ namespace Fornecedores_API.Migrations
 
                     b.HasIndex("FornecedorId");
 
-                    b.ToTable("Enderecos");
+                    b.ToTable("Enderecos", (string)null);
                 });
 
             modelBuilder.Entity("Fornecedores_API.Models.Fornecedor", b =>
@@ -90,7 +90,7 @@ namespace Fornecedores_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Fornecedores");
+                    b.ToTable("Fornecedores", (string)null);
                 });
 
             modelBuilder.Entity("Fornecedores_API.Models.Endereco", b =>
