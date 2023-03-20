@@ -1,4 +1,5 @@
-﻿using Fornecedores_API.Models;
+﻿using Azure.Core;
+using Fornecedores_API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fornecedores_API.Controllers
@@ -14,7 +15,7 @@ namespace Fornecedores_API.Controllers
         [HttpGet("Listar")]
         public async Task<ActionResult<List<Fornecedor>>> ListarFornecedores(string? nome, int? cnpj, string? cidade)
         {
-            List<Fornecedor> fornecedores = await _context.Fornecedores.ToListAsync();
+            List<Fornecedor> fornecedores = await _context.Fornecedores.Include(f => f.Enderecos).ToListAsync();
             if(!String.IsNullOrEmpty(nome))
                 fornecedores = fornecedores.FindAll(f => f.Nome == nome);
             if (cnpj != null)
@@ -30,7 +31,7 @@ namespace Fornecedores_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Fornecedor>> Get(int id)
         {
-            Fornecedor fornecedor = await _context.Fornecedores.FindAsync(id);
+            Fornecedor fornecedor = await _context.Fornecedores.Include(f => f.Enderecos).FirstOrDefaultAsync(f => f.Id == id);
             if (fornecedor == null)
                 return BadRequest("Fornecedor não encontrado");
             return Ok(fornecedor);
@@ -59,7 +60,7 @@ namespace Fornecedores_API.Controllers
         {
             if (ModelState.IsValid)
             {
-                Fornecedor fornecedor = await _context.Fornecedores.FindAsync(request.Id);
+                Fornecedor fornecedor = await _context.Fornecedores.Include(f => f.Enderecos).FirstOrDefaultAsync(f => f.Id == request.Id);
                 if (fornecedor == null)
                     return BadRequest("Fornecedor não encontrado");
 
